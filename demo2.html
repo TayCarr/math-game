@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Math Games JavaScript</title>
+        <style>
+            .box{
+                padding: 10px;
+                font-size: 3em;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Math Games JavaScript</h1>
+        <div class="game">Hello</div>
+        <script>
+            //querySelectorAll returns all instances of the obj where querySelect only returns the first
+            const gameArea = document.querySelectorAll('.game')[0];//will return the first in the array of found objs
+            const output = document.createElement('div');
+
+            output.textContent = "hello world";//this shows in the console log but wont display on screen
+            //need to append it first, select the parent (gameArea) gameArea.append(output);
+            output.val = 0;
+            output.classList.add('box');
+            //when you click will increment and display that val
+            output.addEventListener('click', (e)=>{
+                output.val++;
+                output.textContent = output.val;
+
+                let temp = output.val % 2 ? 'red' : 'blue';
+                output.style.backgroundColor = temp;
+            })
+
+            gameArea.append(output);//now will see it within the code (inspected element) and the page
+            //if only do the above and not the below line it will be added as a div in the game area div
+            //document.body.append(output);//if you do this line and the one above it puts it at the end of body
+            //document.body.prepend(output); //does the opposit puts it before, at the start of body
+
+            let val = gameArea.appendChild(output);
+            console.log(val);
+            //if you try to do:
+                //let val = gameArea.append(output);
+                //console.log(val)
+            //it will return undefined, you have to do appendchild as it is the one that returns the value
+            //append just appends doesnt return, appendChild appends then returns the value so you can assign it, 
+
+
+            console.log(output);
+            
+        </script>
+    </body>
+</html>
