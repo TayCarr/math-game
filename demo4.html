@@ -4,23 +4,22 @@
         <title>Math Games JavaScript</title>
     </head>
     <body>
-        <h1>Math Games JavaScript</h1>
         <div class="game">Hello</div>
         <script>
             const gameArea = document.querySelector('.game');
             const btn = document.createElement('button');
-            const game = {max:10, arr:['a', 'b', 'c', 'd']};
+            const game = {max:10, arr:['b', 'd', 'a', 'q', 'c']};
 
             gameArea.append(btn);
             btn.textContent = 'start game';
             btn.addEventListener('click', startGame);
 
             function startGame(){
-                for(let i = 0; i < 20; i++){
+                for(let i = 0; i < game.max; i++){
                     const div = document.createElement('div');
-                    //let temp = Math.floor(Math.random() * (game.max + 1)); //+1 to include the max 
-                    let temp = Math.floor(Math.random() * game.arr.length);
-                    div.textContent = game.arr[temp];
+                    //game.arr.sort(()=>{ return -1});//this is toggling reverse order
+                    game.arr.sort(()=>{ return 0.5 - Math.random()});//random sort order for array
+                    div.textContent = game.arr.join(' ');
                     gameArea.append(div);
 
                 }
