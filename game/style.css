@@ -1,0 +1,15 @@
+.output{
+    text-align: center;
+    font-size: 2em;
+}
+
+button{
+    text-align: center;
+    margin: auto;
+    display: block;
+    padding: 10px;
+    background-color: red;
+    border-radius: 10px;
+    font-size: 1.5em;
+    color: white;
+}
