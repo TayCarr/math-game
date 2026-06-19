@@ -6,7 +6,12 @@ const answer = document.createElement('input');
 output.textContent = 'Click the button to start the game';
 btn.textContent = 'start game';
 
+answer.setAttribute('type', 'number');
+answer.setAttribute('max', 999);
+answer.setAttribute('min', 0); //dont want negative values
+
 output.classList.add('output');
+answer.classList.add('boxAnswer');
 
 gameArea.append(output);
 gameArea.append(btn);
@@ -16,7 +21,7 @@ const opts = ['*', '/', '+', '-'];
 //max size? of number can ask user, number of questions to ask user
 //ovals is the index num of the op in opts
 //hiddenVal is to set which place is asked, 0->first, 1->second, 2->answer, 3->random
-const game = {maxValue:10, questions:10, oVals:[1], curQue:0, hiddenVal:3};
+const game = {maxValue:10, questions:10, oVals:[0, 1, 2, 3], curQue:0, hiddenVal:3};
 
 btn.addEventListener('click', startGame);
 /** 
@@ -66,11 +71,34 @@ function buildQuestion(){
             hiddenVal = Math.floor(Math.random() * 3);//random location for the hidden val
         }
 
-         
         console.log(hiddenVal);
-        vals[hiddenVal] = '__';
-        output.innerHTML = `${vals[0]} ${vals[3]} ${vals[1]} = ${vals[2]}`;
-    }
-    
+        answer.value = '';
 
+        for(let i = 0; i < 3; i++){
+            if(hiddenVal == i){
+                output.append(answer);
+            }
+            else{
+                maker(vals[i], 'box');
+            }
+            
+            if(i == 0){ //operator
+                maker(vals[3], 'boxSign');
+            }
+            if(i == 1){
+                maker('=', 'boxSign');
+            }
+        }
+
+        //vals[hiddenVal] = '__';
+        //output.innerHTML = `${vals[0]} ${vals[3]} ${vals[1]} = ${vals[2]}`;
+    }  
+
+}
+//pass val and class
+function maker(v, cla){
+    const temp = document.createElement('div');
+    temp.classList.add(cla);
+    temp.textContent = v;
+    output.append(temp);
 }
