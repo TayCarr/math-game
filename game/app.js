@@ -21,7 +21,7 @@ const opts = ['*', '/', '+', '-'];
 //max size? of number can ask user, number of questions to ask user
 //ovals is the index num of the op in opts
 //hiddenVal is to set which place is asked, 0->first, 1->second, 2->answer, 3->random
-const game = {correct:'', maxValue:10, questions:10, oVals:[0, 1, 2, 3], curQue:0, hiddenVal:3, inplay:false};
+const game = {correct:'', maxValue:10, questions:10, oVals:[3], curQue:0, hiddenVal:3, inplay:false};
 
 btn.addEventListener('click', btnCheck);
 
@@ -40,6 +40,7 @@ answer.addEventListener('keyup', (e)=>{
 })
 
 function btnCheck(){
+    btn.style.display = 'none'; //make the button disapear once it is clicked
     if(game.inplay){
         console.log('check');
         console.log(game.correct);
@@ -53,7 +54,6 @@ function btnCheck(){
         buildQuestion();
     }
     else{
-        btn.style.display = 'none'; //make the button disapear once it is clicked
         game.curQue = 0;
         buildQuestion();
     }
@@ -61,13 +61,21 @@ function btnCheck(){
 }
 
 function buildQuestion(){
+    console.log(game.curQue + ' of '+ game.questions);
     if(game.curQue < game.questions){
         game.curQue++;
         output.innerHTML = '';
 
         let vals = [];
         vals[0] = Math.floor(Math.random() * (game.maxValue + 1));
-        vals[1] = Math.floor(Math.random() * (game.maxValue + 1));
+        let tempMax = game.maxValue + 1;
+
+        //subtraction check, no negative answers check
+        if(game.oVals[0] == 3){
+            tempMax = vals[0];
+        }
+
+        vals[1] = Math.floor(Math.random() * tempMax);
 
         game.oVals.sort(()=>{
             return 0.5 - Math.random(); });//randomize the array

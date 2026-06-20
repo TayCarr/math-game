@@ -4,25 +4,26 @@
 }
 
 .boxAnswer{
-    padding: 5px;
+    padding: 12px;
     text-align: center;
     width: 90px;
     background-color: #ddd;
     border: 1px solid #ccc;
-    font-size: 1.3em;
-    
+    font-size: 1.4em;
+    height: 65px;
 }
 
 .boxSign{
     padding: 10px;
     display: inline-block;
+    font-size: 1.1em;
 }
 
 .box{
     padding: 5px;
     text-align: center;
     width: 50px;
-    line-height: 45px;
+    line-height: 55px;
     background-color: rgb(97, 93, 93);
     border: 1px solid #ccc;
     display: inline-block;
