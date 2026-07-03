@@ -1,33 +1,45 @@
 const gameArea = document.querySelector('.game');
+
 const btn = document.createElement('button');
+const btn1 = document.createElement('button');//for next question message
+
 const output = document.createElement('div');
 const answer = document.createElement('input');
+const message = document.createElement('div');
 
 output.textContent = 'Click the button to start the game';
 btn.textContent = 'start game';
+btn1.textContent = 'next question';
 
 answer.setAttribute('type', 'number');
 answer.setAttribute('max', 999);
 answer.setAttribute('min', 0); //dont want negative values
 
-output.classList.add('output');
+output.classList.add('output'); //the name of the element (output) and then the classname you want to give (output) in style sheet .output
+message.classList.add('message');
 answer.classList.add('boxAnswer');
 
+gameArea.append(message);
 gameArea.append(output);
 gameArea.append(btn);
+gameArea.append(btn1);
+
+btn1.style.display = 'none'; //dont want to show until message pops up
 
 const opts = ['*', '/', '+', '-'];
 
 //max size? of number can ask user, number of questions to ask user
 //ovals is the index num of the op in opts
 //hiddenVal is to set which place is asked, 0->first, 1->second, 2->answer, 3->random
-const game = {correct:'', maxValue:10, questions:10, oVals:[3], curQue:0, hiddenVal:3, inplay:false};
+const game = {correct:'', maxValue:2, questions:10, oVals:[0], curQue:0, hiddenVal:3, inplay:false};
+const player = {correct:0, incorrect:0};
 
 btn.addEventListener('click', btnCheck);
+btn1.addEventListener('click', buildQuestion);
 
 answer.addEventListener('keyup', (e)=>{
-    console.log(e.code);
-    console.log(answer.value.length);
+    //console.log(e.code);
+    //console.log(answer.value.length);
     if(answer.value.length >= 0){
         btn.style.display = 'block';
         btn.textContent = 'check';
@@ -42,33 +54,50 @@ answer.addEventListener('keyup', (e)=>{
 function btnCheck(){
     btn.style.display = 'none'; //make the button disapear once it is clicked
     if(game.inplay){
-        console.log('check');
-        console.log(game.correct);
         if(answer.value == game.correct){
-            console.log('correct');
+            message.innerHTML = 'Correct <br>Answer is '+game.correct;
+            player.correct++;
         }
         else{
-            console.log('wrong, correct is: '+game.correct);
+            message.innerHTML = 'Incorrect <br>Answer is '+game.correct;
+            player.incorrect++;
         }
         answer.disabled = true;
-        buildQuestion();
+        nextQuestion();
     }
     else{
         game.curQue = 0;
         buildQuestion();
     }
     
+}//end of btnchk func
+
+function nextQuestion(){
+    btn1.style.display = 'block'; //now show the button
+    
+}
+
+function scoreBoard(){
+    message.innerHTML = `${game.curQue} of ${game.questions} Questions<br>`;
+    message.innerHTML += `Correct : (${player.correct}) vs (${player.incorrect})`;
+
 }
 
 function buildQuestion(){
-    console.log(game.curQue + ' of '+ game.questions);
+    btn1.style.display = 'none'; //hide next q buttn
+
+    //console.log(game.curQue + ' of '+ game.questions);
     if(game.curQue < game.questions){
         game.curQue++;
+        scoreBoard();
         output.innerHTML = '';
 
         let vals = [];
-        vals[0] = Math.floor(Math.random() * (game.maxValue + 1));
+        vals[0] = Math.ceil(Math.random() * (game.maxValue)); //ceiling to get less 0s
         let tempMax = game.maxValue + 1;
+
+        game.oVals.sort(()=>{
+            return 0.5 - Math.random(); });//randomize the array
 
         //subtraction check, no negative answers check
         if(game.oVals[0] == 3){
@@ -76,17 +105,22 @@ function buildQuestion(){
         }
 
         vals[1] = Math.floor(Math.random() * tempMax);
-
-        game.oVals.sort(()=>{
-            return 0.5 - Math.random(); });//randomize the array
         
-        if(game.oVals[0] == 1){
-            //division check
-            //do not want the second value to be 0
+        if(game.oVals[0] == 0){
+            //mult check no 0
+            if(vals[1] == 0){
+                vals[1] = 1;
+            }
             if(vals[0] == 0){
                 vals[0] = 1;
             }
-
+        }
+        //division check no 0
+        if(game.oVals[0] == 1){
+            
+            if(vals[0] == 0){
+                vals[0] = 1;
+            }
             let temp = vals[0] * vals[1];
             vals.unshift(temp);
         }
@@ -120,7 +154,8 @@ function buildQuestion(){
             }
             
             if(i == 0){ //operator
-                maker(vals[3], 'boxSign');
+                let tempSign = vals[3] == '*' ? '&times' : vals[3]; //&times is mult symbol
+                maker(tempSign, 'boxSign');
             }
             if(i == 1){
                 maker('=', 'boxSign');
@@ -130,12 +165,14 @@ function buildQuestion(){
         //vals[hiddenVal] = '__';
         //output.innerHTML = `${vals[0]} ${vals[3]} ${vals[1]} = ${vals[2]}`;
     }  
+    scoreBoard();
 
-}
+}//end of build question func
+
 //pass val and class
 function maker(v, cla){
     const temp = document.createElement('div');
     temp.classList.add(cla);
-    temp.textContent = v;
+    temp.innerHTML = v;
     output.append(temp);
 }
