@@ -3,6 +3,10 @@
     font-size: 2em;
 }
 
+.question, .output{
+    border: 1px solid #ccc;
+}
+
 .gameOptions{
     text-align: center;
     width: 50%;

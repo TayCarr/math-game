@@ -1,34 +1,26 @@
+//create elements
 const gameArea = document.querySelector('.game');
-
 const gameOptions = document.querySelector('.gameOptions');
 
 const btn = document.createElement('button');
-const btn1 = document.createElement('button');//for next question message
-btn.classList.add('startBtn')
-
 const output = document.createElement('div');
-//const answer = document.createElement('input');
 const message = document.createElement('div');
+
+//update elements
+output.classList.add('question')
+output.classList.add('output'); //the name of the element (output) and then the classname you want to give (output) in style sheet .output
+message.classList.add('message');
+btn.classList.add('startBtn')
 
 output.textContent = 'Click the button to start the game';
 btn.textContent = 'start game';
-btn1.textContent = 'next question';
 
-//answer.setAttribute('type', 'number');
-//answer.setAttribute('max', 999);
-//answer.setAttribute('min', 0); //dont want negative values
-
-output.classList.add('output'); //the name of the element (output) and then the classname you want to give (output) in style sheet .output
-message.classList.add('message');
-//answer.classList.add('boxAnswer');
-
+//add elements to page
 gameArea.append(message);
 gameArea.append(output);
 gameArea.append(btn);
-gameArea.append(btn1);
 
-btn1.style.display = 'none'; //dont want to show until message pops up
-
+//game options
 const opts = ['*', '/', '+', '-'];
 
 //max size? of number can ask user, number of questions to ask user
@@ -37,8 +29,8 @@ const opts = ['*', '/', '+', '-'];
 const game = {correct:'', maxValue:10, questions:10, oVals:[0, 1, 2, 3], curQue:0, hiddenVal:3, inplay:false};
 const player = {correct:0, incorrect:0};
 
+//start game on click
 btn.addEventListener('click', startGame);
-btn1.addEventListener('click', buildQuestion);
 
 function startGame(){
 
@@ -54,7 +46,9 @@ function buildBoard(){
 
     output.innerHTML = '';
     for( let i = 0; i < game.questions; i++){
-        const div = document.createElement('div');
+        const div = document.createElement('div');//parent question div
+        div.classList.add('question'); //each "box" around the question (styling)
+        div.append(document.createTextNode(i+1+'. '));
         output.append(div);
         buildQuestions(div);
     }
@@ -168,7 +162,6 @@ function buildQuestions(div){
                 div.append(myBtn);
             }
         }
-        //answer.focus();
         
 }
 
@@ -180,55 +173,6 @@ function maker1(div, v, cla){
     div.append(temp);
 }
 
-/* answer.addEventListener('keyup', (e)=>{
-    //console.log(e.code);
-    //console.log(answer.value.length);
-    if(answer.value.length >= 0){
-        btn.style.display = 'block';
-        btn.textContent = 'check';
-        game.inplay = true;
-    }
-    if(e.code == 'Enter'){
-        game.inplay = true;
-        btnCheck();
-    }
-}) */
-
-function btnCheck(){
-    btn.style.display = 'none'; //make the button disapear once it is clicked
-    if(game.inplay){
-        if(answer.value == game.correct){
-            message.innerHTML = 'Correct <br>Answer is '+game.correct;
-            player.correct++;
-        }
-        else{
-            message.innerHTML = 'Incorrect <br>Answer is '+game.correct;
-            player.incorrect++;
-        }
-        answer.disabled = true;
-        nextQuestion();
-    }
-    else{
-        //start game
-        getValues();
-
-        gameOptions.style.display = 'none';
-        game.curQue = 0;
-        buildQuestion();
-    }
-    
-}//end of btnchk func
-
-function nextQuestion(){
-    btn1.style.display = 'block'; //now show the button
-    
-}
-
-function scoreBoard(){
-    message.innerHTML = `${game.curQue} of ${game.questions} Questions<br>`;
-    message.innerHTML += `Correct : (${player.correct}) vs (${player.incorrect})`;
-
-}
 
 function getValues(){
     game.maxValue = Number(document.querySelector('#maxVal').value); //select the id with the id maxVal (need # infront)
@@ -246,88 +190,4 @@ function getValues(){
     console.log(game);
 }
 
-function buildQuestion(){
-    btn1.style.display = 'none'; //hide next q buttn
-
-    //console.log(game.curQue + ' of '+ game.questions);
-    if(game.curQue < game.questions){
-        game.curQue++;
-        scoreBoard();
-        output.innerHTML = '';
-
-        let vals = [];
-        vals[0] = Math.ceil(Math.random() * (game.maxValue)); //ceiling to get less 0s
-        let tempMax = game.maxValue + 1;
-
-        game.oVals.sort(()=>{
-            return 0.5 - Math.random(); });//randomize the array
-
-        //subtraction check, no negative answers check
-        if(game.oVals[0] == 3){
-            tempMax = vals[0];
-        }
-
-        vals[1] = Math.floor(Math.random() * tempMax);
-        
-        if(game.oVals[0] == 0){
-            //mult check no 0
-            if(vals[1] == 0){
-                vals[1] = 1;
-            }
-            if(vals[0] == 0){
-                vals[0] = 1;
-            }
-        }
-        //division check no 0
-        if(game.oVals[0] == 1){
-            
-            if(vals[0] == 0){
-                vals[0] = 1;
-            }
-            let temp = vals[0] * vals[1];
-            vals.unshift(temp);
-        }
-        else{
-            vals[2] = eval(vals[0] + opts[game.oVals[0]] + vals[1]);
-        }
-        vals[3] = opts[game.oVals[0]];
-        console.log(vals);
-
-        let hiddenVal;
-
-        //if set to a specific value, then that is the hidden position
-        if(game.hiddenVal != 3){
-            hiddenVal = game.hiddenVal;
-        }
-        else{
-            //if set to 3 pick a random spot
-            hiddenVal = Math.floor(Math.random() * 3);//random location for the hidden val
-        }
-
-        answer.value = '';
-        answer.disabled = false;
-
-        for(let i = 0; i < 3; i++){
-            if(hiddenVal == i){
-                game.correct = vals[i];
-                output.append(answer);
-            }
-            else{
-                maker(vals[i], 'box');
-            }
-            
-            if(i == 0){ //operator
-                let tempSign = vals[3] == '*' ? '&times' : vals[3]; //&times is mult symbol
-                maker(tempSign, 'boxSign');
-            }
-            if(i == 1){
-                maker('=', 'boxSign');
-            }
-        }
-        answer.focus();
-        //vals[hiddenVal] = '__';
-        //output.innerHTML = `${vals[0]} ${vals[3]} ${vals[1]} = ${vals[2]}`;
-    }  
-
-}//end of build question func
 
