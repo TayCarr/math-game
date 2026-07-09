@@ -32,14 +32,49 @@ const opts = ['*', '/', '+', '-'];
 //ovals is the index num of the op in opts
 //hiddenVal is to set which place is asked, 0->first, 1->second, 2->answer, 3->random
 const game = {correct:'', maxValue:10, questions:10, oVals:[0, 1, 2, 3], curQue:0, hiddenVal:3, inplay:false};
-const player = {correct:0, incorrect:0, score:[]};
+const player = {correct:0, incorrect:0, score:[], playerName:'tester'};
 
 //start game on click
 btn.addEventListener('click', startGame);
 btn1.addEventListener('click', createCSV);
 
 function createCSV(){
-    
+    let file;
+    let holder = [];
+    let filename = player.playerName + '.csv';
+
+    let properties = {
+        type:"text/csv;charset=utf-8;"
+
+    }
+    player.score.forEach((el) =>{
+        holder += clean(el) + '\n';
+
+    })
+    file = new File([holder], filename, properties);
+    let link = document.createElement('a');
+    let url = window.URL.createObjectURL(file);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    console.log(holder);
+}
+
+function clean(row){
+    let rep = '';
+
+    row.forEach((cell, index)=>{
+        cell = cell == null ? "" : cell.toString();
+        if(cell.search(/("|,|\n)/g) >= 0) cell = '"' + cell + '"';
+        if(index > 0) rep += ",";
+        rep += cell;
+    })
+    return rep;
+
 }
 
 function startGame(){
@@ -47,6 +82,7 @@ function startGame(){
     getValues(); 
     btn.style.display = 'none'; //hide start button
     gameOptions.style.display = 'none'; //hide option inputs
+    btn1.style.display = 'none';
     buildBoard();   
     
 }
@@ -157,11 +193,9 @@ function buildQuestions(div){
             }
         })
         if(cnt >= game.questions){
-            console.log("game done");
             btn1.style.display = 'block';
             btn.style.display = 'block';
         }
-        console.log('Questions done: '+cnt);
     }
 
      //let tempOutput = vals.join(' ');
