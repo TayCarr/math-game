@@ -38,46 +38,14 @@ const player = {correct:0, incorrect:0, score:[], playerName:'tester'};
 btn.addEventListener('click', startGame);
 btn1.addEventListener('click', createCSV);
 
-function createCSV(){
-    let file;
-    let holder = [];
-    let filename = player.playerName + '.csv';
-
-    let properties = {
-        type:"text/csv;charset=utf-8;"
-
-    }
-    player.score.forEach((el) =>{
-        holder += clean(el) + '\n';
-
-    })
-    file = new File([holder], filename, properties);
-    let link = document.createElement('a');
-    let url = window.URL.createObjectURL(file);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    console.log(holder);
-}
-
-function clean(row){
-    let rep = '';
-
-    row.forEach((cell, index)=>{
-        cell = cell == null ? "" : cell.toString();
-        if(cell.search(/("|,|\n)/g) >= 0) cell = '"' + cell + '"';
-        if(index > 0) rep += ",";
-        rep += cell;
-    })
-    return rep;
-
-}
 
 function startGame(){
+    console.log(player);
+    player.score.length = 0;
+    player.correct = 0;
+    player.incorrect = 0;
+    console.log(player);
+
 
     getValues(); 
     btn.style.display = 'none'; //hide start button
@@ -275,4 +243,41 @@ function getValues(){
     //console.log(game);
 }
 
+function clean(row){
+    let rep = '';
 
+    row.forEach((cell, index)=>{
+        cell = cell == null ? "" : cell.toString();
+        if(cell.search(/("|,|\n)/g) >= 0) cell = '"' + cell + '"';
+        if(index > 0) rep += ",";
+        rep += cell;
+    })
+    return rep;
+
+}
+
+function createCSV(){
+    let file;
+    let holder = [];
+    let filename = player.playerName + '.csv';
+
+    let properties = {
+        type:"text/csv;charset=utf-8;"
+
+    }
+    player.score.forEach((el) =>{
+        holder += clean(el) + '\n';
+
+    })
+    file = new File([holder], filename, properties);
+    let link = document.createElement('a');
+    let url = window.URL.createObjectURL(file);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    console.log(holder);
+}

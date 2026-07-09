@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Array Demo</title>
+    </head>
+    <body>
+        <script>
+           const output = document.querySelector('.output');
+
+           const arr1 = ['one', 'Two', 'Three', false, 10, 
+           ['Test A', 'Test B'], 
+           {
+            a: 1,
+            b: 2,
+            c: 3
+            }
+        ]
+
+        const arr2 = arr1; //copies address
+        const arr3 = arr1.slice(); //copy array, make a new address
+
+        console.log(arr1);
+
+        let val = arr1[0];
+        val = arr1.length;
+        val = arr1[5][1];
+
+        arr1.forEach((item, index, arr) =>{
+            //console.log(item,index,arr);
+        })
+
+        //some of these return the length of the array some return the removed item from array
+        val = arr1.push('End'); //add to end of array
+        val = arr1.pop(); //remove from end of array
+        val = arr1.unshift('Start', 'TWO'); //add to start of array, can add multiple items
+        val = arr1.shift();//remove first
+        val = arr1.indexOf('Oneq'); //search for item in array, returns index value, if DNE -1
+        val = arr1.splice(2,1); //remove item at position (2) and how many items want to remove (1), will create a new array with removed items
+        val = arr1.slice(1,4); //copy using start and end values
+
+        console.log(arr1);
+        console.log(val);
+        output.textContent = val;
+
+        </script>
+    </body>
+</html>
